@@ -11,6 +11,7 @@ app.get("/", (req, res) => {
 app.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
   console.log({ name, email, password });
+  res.send("Signup Success");
 });
 
 app.listen(8000, async () => {
