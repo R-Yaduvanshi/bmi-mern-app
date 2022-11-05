@@ -83,6 +83,15 @@ app.get("/getProfile", authentication, async (req, res) => {
   });
 });
 
+//BMI Check
+
+app.post("/calculateBMI", authentication, (req, res) => {
+  const { height, weight } = req.body;
+  const height_in_meter = Number(height) * 0.304;
+  const BMI = Number(weight) / height_in_meter ** 2;
+  res.send({ BMI });
+});
+
 app.listen(8000, async () => {
   try {
     await connection;
