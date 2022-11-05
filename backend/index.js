@@ -18,11 +18,11 @@ app.post("/signup", async (req, res) => {
   const user = await UserModel.findOne({ email });
   console.log(user);
   if (user) {
-    res.send("User already exist");
+    res.send({ Message: "User already exist" });
   } else {
     bcrypt.hash(password, 5, async (err, hash) => {
       if (err) {
-        res.send("Something went wrong");
+        res.send({ Message: "Something went wrong" });
       }
       const new_user = new UserModel({
         name,
@@ -32,9 +32,9 @@ app.post("/signup", async (req, res) => {
 
       try {
         await new_user.save();
-        res.send("Signup Success");
+        res.send({ Message: "Signup Success" });
       } catch (err) {
-        res.send("Something went wrong, please try again");
+        res.send({ Message: "Something went wrong, please try again" });
       }
     });
   }
