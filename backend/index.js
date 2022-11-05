@@ -5,6 +5,7 @@ app.use(express.json());
 const bcrypt = require("bcrypt");
 const { connection } = require("./config/db");
 const { UserModel } = require("./models/UserModel.model");
+const { authentication } = require("./middlewares/authentication");
 app.get("/", (req, res) => {
   res.send("Welcome its working");
 });
@@ -67,6 +68,19 @@ app.post("/login", async (req, res) => {
   } else {
     res.send("Signup First");
   }
+});
+
+//GetProgfile
+
+app.get("/getProfile", authentication, async (req, res) => {
+  const { userID } = req.body;
+  const user = await UserModel.findOne({ _id: userID });
+  const { name, email } = user;
+  // console.log(user);
+  res.send({
+    name,
+    email,
+  });
 });
 
 app.listen(8000, async () => {
