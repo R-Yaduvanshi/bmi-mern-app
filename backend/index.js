@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const { connection } = require("./config/db");
 const { UserModel } = require("./models/UserModel.model");
 const { authentication } = require("./middlewares/authentication");
+const { BmiModel } = require("./models/BMIModel");
 app.get("/", (req, res) => {
   res.send("Welcome its working");
 });
@@ -85,11 +86,31 @@ app.get("/getProfile", authentication, async (req, res) => {
 
 //BMI Check
 
-app.post("/calculateBMI", authentication, (req, res) => {
-  const { height, weight } = req.body;
+app.post("/calculateBMI", authentication, async (req, res) => {
+  const { height, weight, userID } = req.body;
+  const user = await UserModel.findOne({ _id: userID });
+  const name = user.name;
   const height_in_meter = Number(height) * 0.304;
   const BMI = Number(weight) / height_in_meter ** 2;
+  const new_bmi = new BmiModel({
+    name,
+    user_id: userID,
+    height: height_in_meter,
+    weight,
+  });
+
+  await new_bmi.save();
   res.send({ BMI });
+});
+
+//BMI History
+
+app.get("/getBMIrecords", authentication, async (req, res) => {
+  const { userID } = req.body;
+  const bmi_history = await BmiModel.find({ user_id: userID });
+  res.send({
+    your_BMI_Data: bmi_history,
+  });
 });
 
 app.listen(8000, async () => {
