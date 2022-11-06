@@ -60,14 +60,14 @@ app.post("/login", async (req, res) => {
         });
       }
       if (result == false) {
-        res.send("Wrong password");
+        res.send({ Message: "Wrong password" });
       }
       if (err) {
-        res.send("Something Went wrong");
+        res.send({ Message: "Something Went wrong" });
       }
     });
   } else {
-    res.send("Signup First");
+    res.send({ Message: "Signup First" });
   }
 });
 
